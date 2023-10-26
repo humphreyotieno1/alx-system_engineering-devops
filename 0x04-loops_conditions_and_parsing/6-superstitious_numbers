@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+#script to display 1 - 20
+#on the 4th, diplay "bad luck from China"
+#on the 9th, display "bad luck from Japan"
+#on the 17th, display "bad luck from Italy"
+
+x=1
+while [ "$x" -le 20 ]
+do
+   echo "$x"
+   case $x in
+	4) echo "bad luck from China" ;;
+	9) echo "bad luck fro Japan" ;;
+	17) echo "bad luck from Italy" ;;
+   esac
+   (( x++ ))
+done
