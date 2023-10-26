@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+#script to display current directory in list form without hidden files
+
+files="$(ls)"
+for x in $files;
+do
+   echo "$x" | cut -d "-" -f2
+done
