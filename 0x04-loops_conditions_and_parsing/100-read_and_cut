@@ -5,5 +5,5 @@ F="/etc/passwd"
 
 while read LINE
 do
-   echo "$LINE" | cut ":" -f1,3,6
+   echo "$LINE" | cut -d ":" -f1,3,6
 done < "$F"
