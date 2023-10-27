@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+#script that receives and kills signals from running process
+
+while true
+do
+   echo "To infinity and beyond"
+   sleep 2
+   trap 'echo "I am invincible!!!"'
+done
