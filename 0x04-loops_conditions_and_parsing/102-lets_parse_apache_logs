@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+#script that parses file for IP and HTTP fields vi awk
+
+file="apache-access.log"
+awk '{print $1, $9}' $file
