@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+#script to display listening ports and PIDs
+
+sudo netstat -pl
