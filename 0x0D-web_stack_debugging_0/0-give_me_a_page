@@ -2,3 +2,4 @@
 # Debugging Apache server in Docker
 
 sudo service apache2 start
+tail -f /dev/null
