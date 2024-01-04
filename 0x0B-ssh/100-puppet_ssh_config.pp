@@ -1,18 +1,12 @@
 #!/usr/bin/env bash
 # Connecting without a password
 
-include stdlib
-
-file_line { 'Turn off passwd auth':
+file { '/etc/ssh/ssh_config':
   ensure  => present,
-  path	  => '/etc/ssh/ssh_config',
-  line	  => 'PasswordAuthentication no',
-  match	  => '^#PasswordAuthentication',
-}
-
-file_line { 'Declare identity file':
-  ensure  => present,
-  path	  => '/etc/ssh/ssh_config',
-  line	  => 'IdentifyFile ~/.ssh/school',
-  match	  => '^IdentifyFile',
+  content => "
+  	  #ssh client configuration
+	  host*
+	  IdentityFile ~/.ssh/school
+	  PasswordAuthentication no
+	  ",
 }
