@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+# Configuring nginx with a custom header
+
+REMOTE_USER=$1
+REMOTE_HOST=$2
+NGINX_CONFIG_PATH="/etc/nginx/nginx.conf"
+VALUE=$3
+
+if [ $# -lt 3 ]
+then
+	echo "not enough arguments"
+	exit 1
+fi
+
+CONFIG_CONTENT="
+events {
+	worker_connections 1024;
+}
+http {
+	server {
+		listen 80;
+		server_name 34.229.67.177;
+		add_header X-Served-By \"$VALUE\";
+
+		location / {
+			root /var/www/html;
+			index index.html;
+			autoindex on;
+		}
+	}
+}
+"
+
+echo "$CONFIG_CONTENT" | ssh "$REMOTE_USER"@"$REMOTE_HOST" "sudo tee $NGINX_CONFIG_PATH > /dev/null"
+
+ssh "$REMOTE_USER"@"$REMOTE_HOST" "sudo systemctl restart nginx"
