@@ -1,17 +1,23 @@
 #!/usr/bin/env bash
-#configure nginx server for a 404 error
+# Customizing a 404-error_page
 
-config_file="/etc/nginx/sites-available/default"
-not_found_content="Ceci n'est pas une page"
+# Updating Packages
+sudo apt-get update
+sudo apt-get install -y nginx
 
+# Creating an index.html page
+echo "Hello World!" | sudo tee /var/www/html/index.html
 
-sed -i "/server {/a \
-        error_page 404 /404_custom.html;" "$config_file"
+# Performing a "moved permanently redirection" (301)
+new_string="server_name _;\n\trewrite ^\/redirect_me https:\/\/github.com\/humphreyotieno1 permanent;"
+sudo sed -i "s/server_name _;/$new_string/" /etc/nginx/sites-enabled/default
 
+# Creating a 404 Custom error page
+echo "Ceci n'est pas une page" | sudo tee /var/www/html/404.html
+new_string="listen 80 default_server;\n\terror_page 404 \/404.html;\n\tlocation = \/404.html {\n\t\troot \/var\/www\/html;\n\t\tinternal;\n\t}"
 
-echo "$not_found_content" | sudo tee /var/www/html/404_custom.html > /dev/null
+sudo sed -i "s/listen 80 default_server;/$new_string/" /etc/nginx/sites-enabled/default
 
+sudo nginx -t
 
-nginx -t
-
-service nginx restart
+sudo service nginx restart
