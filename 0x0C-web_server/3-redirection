@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
-# Configure a new server for redirection
+# Script to configure a new Ubuntu machine
 
-config_file="/etc/nginx/sites-available/default"
+# Upadating Packages
+sudo apt-get update
+sudo apt-get install -y nginx
 
-sed -i '/location \/ {/a \
-        location \/redirect_me { \
-            return 301 https:\/\/example.com\/new-page; \
-        }' "$config_file"
+# Creating an index.html page
+echo "Hello World!" | sudo tee /var/www/html/index.html
 
-nginx -t
+# Performing a 301 Redirection
+string_for_replacement="server_name _;\n\trewrite ^\/redirect_me https:\/\/github.com\/humphreyotieno1 permanent;"
+sudo sed -i "s/server_name _;/$string_for_replacement/" /etc/nginx/sites-enabled/default
 
-service nginx restart
+sudo service nginx restart
