@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 # installing and configuring haproxy
 
-PATH_TO_CFG="/etc/haproxy/haproxy.cfg"
-REMOTE_USER="ubuntu"
-REMOTE_HOST="54.146.10.47"
-ssh "$REMOTE_USER"@"$REMOTE_HOST" "sudo apt-get update -y && sudo apt install haproxy -y"
+# Install and configure HAproxy on my lb-01 server.
+sudo apt-get -y update
+apt-get -y install haproxy
 
-CONFIG_CONTENT="
+# edit config file
+server_config=\
+"
 frontend my_frontend
 	bind *:80
 	mode http
@@ -17,9 +18,17 @@ backend my_servers
 	mode http
 	timeout connect 20s
 	balance roundrobin
-	server 335068-web-01 54.209.114.103:80
-	server 335068-web-02 100.25.159.27:80
+	server 437370-web-01 54.209.114.103:80 check
+	server 437370-web-02 100.25.159.27:80 check
 	timeout server 20s
 "
-echo "$CONFIG_CONTENT" | ssh "$REMOTE_USER"@"$REMOTE_HOST" "sudo tee $PATH_TO_CFG > /dev/null && sudo haproxy -c -f $PATH_TO_CFG && sudo systemctl restart haproxy"
+echo "$server_config" | sudo tee -a /etc/haproxy/haproxy.cfg
 
+# enable haproxy to be started by init script
+echo "ENABLED=1" | sudo tee -a /etc/default/haproxy
+
+# Testing the HAproxy configuration file
+sudo haproxy -c -f /etc/haproxy/haproxy.cfg
+
+# Restart the Nginx service
+sudo service haproxy restart
