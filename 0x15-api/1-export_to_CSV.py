@@ -1,10 +1,8 @@
 #!/usr/bin/python3
 """Export the data to a CSV file"""
-
-
+import csv
 import requests
 import sys
-import csv
 
 
 if __name__ == '__main__':
