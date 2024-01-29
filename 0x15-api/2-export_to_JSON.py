@@ -1,11 +1,11 @@
 #!/usr/bin/python3
-"""Export the data to a CSV file"""
-import csv
+"""Export the data to a JSON file"""
+import json
 import requests
 import sys
 
 
-def export_to_csv(employee_id):
+def export_to_json(employee_id):
     base_url = "https://jsonplaceholder.typicode.com/"
     
     user_response = requests.get(base_url + "users/{}".format(employee_id))
@@ -15,14 +15,20 @@ def export_to_csv(employee_id):
     todo_data = todo_response.json()
 
     username = user_data.get("username")
-    csv_data = [
-        [employee_id, username, task.get("completed"), task.get("title")]
-        for task in todo_data
-    ]
+    json_data = {
+        employee_id: [
+            {
+                "task": task.get("title"),
+                "completed": task.get("completed"),
+                "username": username,
+            }
+            for task in todo_data
+        ]
+    }
 
-    with open("{}.csv".format(employee_id), "w", newline='') as file:
-        writer = csv.writer(file, quoting=csv.QUOTE_ALL)
-        writer.writerows(csv_data)
+    file_json = "{}.json".format(employee_id)
+    with open(file_json, 'w') as f:
+        json.dump(json_data, f)
 
 if __name__ == '__main__':
     # Check if the correct number of command-line arguments is provided
@@ -32,4 +38,4 @@ if __name__ == '__main__':
 
     employee_id = int(sys.argv[1])
 
-    export_to_csv(employee_id)
+    export_to_json(employee_id)
